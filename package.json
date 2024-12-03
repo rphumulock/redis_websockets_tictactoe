@@ -5,7 +5,7 @@
   "scripts": {
     "install:backend": "cd backend && npm install",
     "install:frontend": "cd frontend && npm install",
-    "install:all": "npm run install:backend && npm run install:frontend",
+    "install:all": "npm i && npm run install:backend && npm run install:frontend",
     "start:backend:socketio": "cd backend && node server.js --use-socket-io",
     "start:backend:raw": "cd backend && node server.js",
     "start:frontend:socketio": "cd frontend && npm run dev",
