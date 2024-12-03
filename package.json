@@ -15,7 +15,8 @@
     "check:redis": "docker ps -a --filter name=redis-tictactoe",
     "dev:socketio": "npm run install:all && npm run start:redis && concurrently \"npm run start:backend:socketio\" \"npm run start:frontend:socketio\"",
     "dev:raw": "npm run install:all && npm run start:redis && concurrently \"npm run start:backend:raw\" \"npm run start:frontend:raw\"",
-    "dev": "npm run dev:socketio"
+    "dev": "npm run dev:socketio",
+    "subscribe:game-moves": "docker exec -it redis-tictactoe redis-cli SUBSCRIBE game-moves"
   },
   "dependencies": {
     "concurrently": "^7.6.0"

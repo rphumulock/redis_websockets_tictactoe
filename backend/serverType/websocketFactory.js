@@ -1,5 +1,5 @@
 import initSocketIO from "./socketIO.js";
-import initRawWebSocket from "./rawWebsocket.js";
+import initRawWebSocket from "./websocket.js";
 
 export function initWebSocket(type, server, pubClient, subClient) {
   if (type === "socket-io") {

@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import http from "http";
 import { createClient } from "redis";
-import { initWebSocket } from "./websocketFactory.js";
+import { initWebSocket } from "./serverType/websocketFactory.js";
 
 dotenv.config();
 

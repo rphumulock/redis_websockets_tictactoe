@@ -1,8 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { SocketIOStrategy } from "../strategies/socketioStrategy";
-import { WebSocketStrategy } from "../strategies/websocketStrategy";
-
-const useSocketIO = import.meta.env.VITE_REACT_APP_USE_SOCKET_IO === "true";
 
 export const useGameConnection = () => {
   const [gameState, setGameState] = useState({
@@ -10,45 +6,68 @@ export const useGameConnection = () => {
     xIsNext: true,
     winner: null,
   });
-
+  const [playerRole, setPlayerRole] = useState(
+    localStorage.getItem("playerRole") || null
+  );
   const [isConnected, setIsConnected] = useState(false);
-  const connectionRef = useRef(null);
+  const [errorMessage, setErrorMessage] = useState(null); // Track connection errors
+
+  const socketRef = useRef(null);
 
   useEffect(() => {
-    console.log("Initializing connection...");
+    const ws = new WebSocket("ws://localhost:3000");
+    socketRef.current = ws;
 
-    // Choose the appropriate connection strategy
-    const strategy = useSocketIO
-      ? new SocketIOStrategy("http://localhost:3000")
-      : new WebSocketStrategy("ws://localhost:3000");
+    ws.onopen = () => {
+      setIsConnected(true);
+      console.log("WebSocket connected");
+    };
 
-    connectionRef.current = strategy;
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
 
-    // Establish connection and manage lifecycle events
-    strategy.connect(
-      () => setIsConnected(true), // onConnect
-      () => setIsConnected(false), // onDisconnect
-      (message) => {
-        console.log("Received gameState:", message);
-        setGameState(message);
-      } // onMessage
-    );
+        if (message.type === "playerAssignment") {
+          const role = message.data.playerRole;
+          setPlayerRole(role);
+          setGameState(message.data.gameState);
 
-    // Cleanup on unmount
+          // Store the assigned role in localStorage
+          localStorage.setItem("playerRole", role);
+        } else if (message.type === "gameState") {
+          setGameState(message.data);
+        } else if (message.type === "error") {
+          setErrorMessage(message.message);
+          console.error("Connection error:", message.message);
+        }
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+
+    ws.onclose = () => {
+      setIsConnected(false);
+      console.log("WebSocket disconnected");
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
     return () => {
-      console.log("Disconnecting...");
-      strategy.disconnect();
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
     };
   }, []);
 
   const sendMessage = (type, data) => {
-    const connection = connectionRef.current;
-    if (connection) {
-      connection.sendMessage(type, data);
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({ type, data }));
     } else {
-      console.error("Connection is not initialized");
+      console.error("WebSocket is not open");
     }
   };
 
-  return { gameState, isConnected, sendMessage };
+  return { gameState, playerRole, isConnected, errorMessage, sendMessage };
 };

@@ -1,5 +1,10 @@
 import { Server as SocketIOServer } from "socket.io";
-import { gameState, calculateWinner, resetGame } from "./gameState.js";
+import {
+  gameState,
+  calculateWinner,
+  resetGame,
+  isBoardFull,
+} from "../game/gameState.js";
 
 export default function initSocketIO(server, pubClient, subClient) {
   const io = new SocketIOServer(server, {
@@ -25,6 +30,7 @@ export default function initSocketIO(server, pubClient, subClient) {
       gameState.board[index] = gameState.xIsNext ? "X" : "O";
       gameState.xIsNext = !gameState.xIsNext;
       gameState.winner = calculateWinner(gameState.board);
+      gameState.draw = isBoardFull(gameState.board) && !gameState.winner;
 
       pubClient.publish("game-moves", JSON.stringify(gameState));
     });
