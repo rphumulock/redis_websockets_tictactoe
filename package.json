@@ -1,0 +1,23 @@
+{
+  "name": "project-root",
+  "version": "1.0.0",
+  "description": "Tic-Tac-Toe Project with Frontend and Backend",
+  "scripts": {
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "start:backend:socketio": "cd backend && node server.js --use-socket-io",
+    "start:backend:raw": "cd backend && node server.js",
+    "start:frontend:socketio": "cd frontend && npm run dev",
+    "start:frontend:raw": "cd frontend && npm run dev:raw",
+    "start:redis": "docker inspect redis-tictactoe > /dev/null 2>&1 || docker run --name redis-tictactoe -p 6379:6379 -d redis && docker start redis-tictactoe",
+    "stop:redis": "docker stop redis-tictactoe > /dev/null 2>&1 || true && docker rm redis-tictactoe > /dev/null 2>&1 || true",
+    "check:redis": "docker ps -a --filter name=redis-tictactoe",
+    "dev:socketio": "npm run install:all && npm run start:redis && concurrently \"npm run start:backend:socketio\" \"npm run start:frontend:socketio\"",
+    "dev:raw": "npm run install:all && npm run start:redis && concurrently \"npm run start:backend:raw\" \"npm run start:frontend:raw\"",
+    "dev": "npm run dev:socketio"
+  },
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "VITE_REACT_APP_USE_SOCKET_IO=true vite",
+    "dev:raw": "VITE_REACT_APP_USE_SOCKET_IO=false vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

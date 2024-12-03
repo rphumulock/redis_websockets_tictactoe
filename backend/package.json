@@ -1,22 +1,30 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "socketio-server.js",
+  "description": "Backend for Tic-Tac-Toe game using WebSockets and Redis",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start-sio": "node socketio-server.js",
-    "start-raw": "node raw-websockets-server.js",
-    "test": "node test.js"
+    "start-sio": "node server.js --use-socket-io",
+    "start-raw": "node server.js",
+    "test": "node test.js",
+    "start": "npm run start-sio"
   },
-  "keywords": [],
+  "keywords": [
+    "backend",
+    "websocket",
+    "redis",
+    "socketio",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "redis": "^4.7.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "ws": "^8.14.0"
   },
   "devDependencies": {
     "socket.io-client": "^4.8.1"
