@@ -2,6 +2,7 @@
   "name": "project-root",
   "version": "1.0.0",
   "description": "Tic-Tac-Toe Project with Frontend and Backend",
+  "type": "module",
   "scripts": {
     "install:backend": "cd backend && npm install",
     "install:frontend": "cd frontend && npm install",
