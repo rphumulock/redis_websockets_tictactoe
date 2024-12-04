@@ -1,4 +1,4 @@
-import { useGameConnection } from "../hooks/useGameConnection";
+import { useGameConnection } from "../strategies/useGameConnection";
 
 function App() {
   const { gameState, playerRole, isConnected, errorMessage, sendMessage } =

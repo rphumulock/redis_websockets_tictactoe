@@ -14,7 +14,7 @@ export const useGameConnection = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const socketRef = useRef(null);
-  const useSocketIO = import.meta.env.VITE_REACT_APP_USE_SOCKET_IO === "true"; // Use env variable
+  const useSocketIO = import.meta.env.VITE_REACT_APP_USE_SOCKET_IO === "true"; // Env variable
 
   useEffect(() => {
     if (useSocketIO) {
@@ -51,7 +51,7 @@ export const useGameConnection = () => {
         socket.disconnect();
       };
     } else {
-      // Initialize WebSocket
+      // Existing WebSocket logic
       const ws = new WebSocket("ws://localhost:3000");
       socketRef.current = ws;
 
@@ -61,31 +61,23 @@ export const useGameConnection = () => {
       };
 
       ws.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          if (message.type === "gameState") {
-            setGameState(message.data);
-          } else if (message.type === "playerAssignment") {
-            const { playerRole, gameState } = message.data;
-            setPlayerRole(playerRole);
-            setGameState(gameState);
-            localStorage.setItem("playerRole", playerRole);
-          } else if (message.type === "error") {
-            setErrorMessage(message.message);
-            console.error("WebSocket error:", message.message);
-          }
-        } catch (error) {
-          console.error("Error parsing WebSocket message:", error);
+        const message = JSON.parse(event.data);
+        if (message.type === "gameState") {
+          setGameState(message.data);
+        } else if (message.type === "playerAssignment") {
+          const { playerRole, gameState } = message.data;
+          setPlayerRole(playerRole);
+          setGameState(gameState);
+          localStorage.setItem("playerRole", playerRole);
+        } else if (message.type === "error") {
+          setErrorMessage(message.message);
+          console.error("WebSocket error:", message.message);
         }
       };
 
       ws.onclose = () => {
         setIsConnected(false);
         console.log("WebSocket disconnected");
-      };
-
-      ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
       };
 
       return () => {
