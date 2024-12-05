@@ -18,6 +18,13 @@ project-root/
 - Node.js version 16 or higher
 - Docker for Redis
 
+**Start**
+1. Simply run
+   
+   ```
+   npm run dev
+   ```
+
 **Installation:**
 
 1. Install all dependencies:
